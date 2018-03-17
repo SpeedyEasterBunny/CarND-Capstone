@@ -187,7 +187,7 @@ class WaypointUpdater(object):
         next_waypoints = []
         init_vel = self.velocity.linear.x
         end = start + LOOKAHEAD_WPS
-        accel = 0.5 * self.accel_limit
+        accel = self.accel_limit
         for idx in range(start, end):
             dist = self.distance(waypoints, start, (idx+1)%len(waypoints))
             speed = math.sqrt(init_vel**2 + 2 * accel * dist)
@@ -218,7 +218,7 @@ class WaypointUpdater(object):
             next_waypoints.append(deepcopy(waypoints[idx]))
         return next_waypoints
 
-    def continue_with_current_state(self, waypoints, start):
+    def continue_with_current_state(self, waypoints, start, target_speed):
         next_waypoints = []
         j = 0
         while j < len(self.final_waypoints):
@@ -231,7 +231,7 @@ class WaypointUpdater(object):
             next_waypoints.append(current_waypoint)
         for i in range(len(next_waypoints), LOOKAHEAD_WPS):
             current_waypoint = deepcopy(waypoints[(start + i) % len(waypoints)])
-            current_waypoint.twist.twist.linear.x = self.cruise_speed
+            current_waypoint.twist.twist.linear.x = target_speed
             next_waypoints.append(current_waypoint)
         return  next_waypoints
 
@@ -261,11 +261,11 @@ class WaypointUpdater(object):
         if self.current_state == State.ACCELERATION and self.state_changed:
             next_waypoints = self.accelerate_waypoints(waypoints, car_index)
         elif self.current_state == State.ACCELERATION and not self.state_changed:
-            next_waypoints = self.continue_with_current_state(waypoints, car_index)
+            next_waypoints = self.continue_with_current_state(waypoints, car_index, self.cruise_speed)
         elif self.current_state == State.DECELERATION and self.state_changed:
             next_waypoints = self.decelerate_waypoints(waypoints, car_index)
         elif self.current_state == State.DECELERATION and not self.state_changed:
-            next_waypoints = self.continue_with_current_state(waypoints, car_index)
+            next_waypoints = self.continue_with_current_state(waypoints, car_index, 0.0)
         else:
             rospy.logerr("WaypointUpdater: A state doesn't exist.")
 

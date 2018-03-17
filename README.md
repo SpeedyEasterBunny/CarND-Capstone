@@ -8,17 +8,31 @@ As the Capstone Project of the Self-Driving Car Engineer Nanodegree, the System 
 
 **Peng Xu**
 
+robotpengxu@gmail.com
+
 **Ravel Antunes**
+
+ravelantunes@gmail.com
 
 **William O Grady**
 
+willog11@gmail.com
+
 **Danilo Canivel**
+
+d.canivel@gmail.com
 
 **Naveen Pandey**
 
-### Architecture
+naveen.pnd@gmail.com
+
+### System Architecture
+
+![](./imgs/final-project-ros-graph-v2.png)
 
 ### Perception
+
+![](./imgs/tl-detector-ros-graph.png)
 
 #### 1. Traffic Light Detector Node
 
@@ -41,11 +55,15 @@ The data collection stage itself took a bit of time as data from both the simula
 
 ### Planning
 
+![](./imgs/waypoint-updater-ros-graph.png)
+
 #### 1. Waypoint Loader Node
 
 #### 2. Waypoint Updater Node
 
 ### Control
+
+![](./imgs/dbw-node-ros-graph.png)
 
 #### 1. Waypoint Follower Node
 

@@ -221,8 +221,9 @@ class WaypointUpdater(object):
     def continue_with_current_state(self, waypoints, start, target_speed):
         next_waypoints = []
         j = 0
+        dl = lambda a, b: math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2)
         while j < len(self.final_waypoints):
-            if self.final_waypoints[j].pose.pose.position == waypoints[start].pose.pose.position:
+            if dl(self.final_waypoints[j].pose.pose.position, waypoints[start].pose.pose.position) < 1e-4:
                 break
             j += 1
         for i in range(j, len(self.final_waypoints)):
@@ -245,7 +246,7 @@ class WaypointUpdater(object):
 
                 min_brake_distance = 0.5 * self.velocity.linear.x ** 2 / self.decel_limit_max
                 max_brake_distance = 0.5 * self.velocity.linear.x ** 2 / self.decel_limit_min
-                if max_brake_distance >= brake_distance >= min_brake_distance:
+                if max_brake_distance + 50 >= brake_distance >= min_brake_distance:
                     self.current_state = State.DECELERATION
                     self.state_changed = True
 

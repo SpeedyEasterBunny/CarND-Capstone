@@ -86,8 +86,6 @@ class WaypointUpdater(object):
     def traffic_cb(self, msg):
         # Callback for /traffic_waypoint message. Implement
         self.traffic_index = msg.data
-        if self.traffic_index != -1 and self.num_waypoints is not None:
-            self.traffic_index = (self.traffic_index - 5 + self.num_waypoints) % self.num_waypoints
 
     def obstacle_cb(self, msg):
         # TODO: Callback for /obstacle_waypoint message. We will implement it later
@@ -105,8 +103,10 @@ class WaypointUpdater(object):
     def distance(self, waypoints, wp1, wp2):
         dist = 0
         dl = lambda a, b: math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2 + (a.z-b.z)**2)
+        if wp2 < wp1:
+            wp2 += len(waypoints)
         for i in range(wp1, wp2+1):
-            dist += dl(waypoints[wp1].pose.pose.position, waypoints[i].pose.pose.position)
+            dist += dl(waypoints[wp1%len(waypoints)].pose.pose.position, waypoints[i%len(waypoints)].pose.pose.position)
             wp1 = i
         return dist
 
@@ -242,7 +242,7 @@ class WaypointUpdater(object):
         # Handle state changes
         if self.current_state == State.ACCELERATION:
             if self.traffic_index != -1:
-                brake_distance = self.distance(waypoints, car_index, self.traffic_index) - SAFETY_BUFFER
+                brake_distance = self.distance(waypoints, car_index, self.traffic_index)
 
                 min_brake_distance = 0.5 * self.velocity.linear.x ** 2 / self.decel_limit_max
                 max_brake_distance = 0.5 * self.velocity.linear.x ** 2 / self.decel_limit_min

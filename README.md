@@ -94,6 +94,8 @@ The throttle is initialized with a min and max acceleration values. It uses a PI
 
 ##### 3) Steering Controller (yaw_controller.py)
 
+The steering controller calculates the amount of steering it should send to the actuator using the target linear and angular velocity, taking into account the steer ratio of the vehicle.
+
 ### Test on Simulator
 
 ### Test on Carla

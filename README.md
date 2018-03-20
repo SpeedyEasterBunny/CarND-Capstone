@@ -91,6 +91,7 @@ The throttle is initialized with a min and max acceleration values. It uses a PI
 
 ##### 2) Braking Controller (braking_controller.py)
 
+The brake controller calculates the amount of torque to be sent to the brake by multiplying the vehicle mass, wheel radius and aceleration.
 
 ##### 3) Steering Controller (yaw_controller.py)
 

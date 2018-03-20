@@ -69,11 +69,33 @@ The data collection stage itself took a bit of time as data from both the simula
 
 #### 2. Drive By Wire (DBW) Node
 
-##### 1) Throttle Controller
+The purpose of the drive by wire node is to publish commands to the vehicle actuators: steering wheel, accelerator, and break. The node subscribes to the following nodes:
 
-##### 2) Steering Controller
+- /current_velocity
+- /twist_cmd
+- /vehicle/dbw_enabled
 
-##### 3) Braking Controller
+It uses information from current_velocity and twist_cmd to determine the values to be sent to the actuators, while /vehicle/dbw_enabled topic is only used to determine if drive-by-wire is being overridden, in which point it will stop publishing any message, and ignore the received messages.
+
+The node delegates the actuator's value to the twist_controller class, which returns a value for each of the actuators.
+
+##### Twist Controller
+
+The twist controller is initialized with values based on the vehicle configuration, as steer ratio and vehicle mass, and implements a single method `control`, which receives the vehicle target position and current velocity, and will return a value for acceleration, braking, and steering.
+It will in turn, delegate the calculation for each of those values to the throttle_controller, brake_controller, and yaw_controller.
+The yaw_controller calculates a steering angle for every update, while the twist controller will calculate the position error (current - target) to determine if braking or acceleration should be engaged.  If the error is positive, the throttle controller is used, while a negative error will be sent to the brake PID. 
+
+##### 1) Throttle Controller (throttle_controller.py)
+
+The throttle is initialized with a min and max acceleration values. It uses a PID controller to determine the amount of acceleration or decelaration to be given based on the difference between the target velocity and the current velocity.
+
+##### 2) Braking Controller (braking_controller.py)
+
+The brake controller calculates the amount of torque to be sent to the brake by multiplying the vehicle mass, wheel radius and aceleration.
+
+##### 3) Steering Controller (yaw_controller.py)
+
+The steering controller calculates the amount of steering it should send to the actuator using the target linear and angular velocity, taking into account the steer ratio of the vehicle.
 
 ### Test on Simulator
 

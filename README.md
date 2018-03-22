@@ -16,7 +16,7 @@ As the Capstone Project of the Self-Driving Car Engineer Nanodegree, the System 
 
     ravelantunes@gmail.com
 
-    Role: Twist Controller & Test.
+    Role: Control & Test.
 
 - **William O Grady**
 

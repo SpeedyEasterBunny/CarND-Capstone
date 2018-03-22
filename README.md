@@ -67,15 +67,23 @@ The data collection stage itself took a bit of time as data from both the simula
 
 ![](./imgs/waypoint-updater-ros-graph.png)
 
-#### 1. Waypoint Loader Node
+#### 1. Waypoint Loader Node (waypoint_loader.py)
 
-#### 2. Waypoint Updater Node
+The waypoint loader node is the node responsible for publishing the list of waypoints that the vehicle should go through, prior to any path planning. On the simulator, for development purposes, the node simply loads a list of static waypoints and publishes them to `/base_waypoints`
+
+#### 2. Waypoint Updater Node (waypoint_updater.py)
+
+The waypoint updater node is responsible for planning the immediate waypoints the vehicle should follow. It accomplishes that by loading the base waypoints and taking into account the vehicle current state information and any detected obstacle or traffic light.
+
+It will the publish to `/final_waypoints` the next N number of waypoints the vehicle should go through. It also publishes the car closest waypoint index to `/car_index`.
 
 ### Control
 
 ![](./imgs/dbw-node-ros-graph.png)
 
 #### 1. Waypoint Follower Node
+
+The waypoint follower node uses the `/final_waypoints` data to publish `/twist_cmd` for the dbw node to use. The node implementation uses an open source implementation of pure pursuit algorithm from Autoware. (https://github.com/CPFL/Autoware)
 
 #### 2. Drive By Wire (DBW) Node
 

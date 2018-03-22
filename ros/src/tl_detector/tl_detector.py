@@ -13,7 +13,7 @@ from cv_bridge import CvBridge
 sys.path.append('light_classification')
 from light_classification.tl_classifier import TLClassifier
 
-STATE_COUNT_THRESHOLD = 3
+STATE_COUNT_THRESHOLD = 1
 DISTANCE_LIMIT = 150
 
 
@@ -124,8 +124,8 @@ class TLDetector(object):
         # Find nearest points
         for i in range(len(waypt)):
             cur_wp_pos = waypt[i].pose.pose.position
-            dist = self.euclidean_distance(pose.position.x, pose.position.y, pose.position.z, cur_wp_pos.x,
-                                           cur_wp_pos.y, cur_wp_pos.z)
+            dist = self.euclidean_distance(pose.position.x, pose.position.y, pose.position.z,
+                                           cur_wp_pos.x, cur_wp_pos.y, cur_wp_pos.z)
             if dist < min_distance:
                 closest_wp_index = i
                 min_distance = dist
@@ -205,7 +205,7 @@ class TLDetector(object):
                 stop_lt_pos = self.waypoints.waypoints[closest_wp_idx].pose.pose.position
                 dist = self.euclidean_distance(stop_lt_pos.x, stop_lt_pos.y, stop_lt_pos.z, light.x, light.y, 0)
 
-                if (dist < min_dist) and (closest_wp_idx > (car_position + 1)):
+                if (dist < min_dist) and (closest_wp_idx > (car_position + 1)%len(self.waypoints.waypoints)):
                     stop_wp_idx = closest_wp_idx
                     min_dist = dist
 
@@ -214,12 +214,12 @@ class TLDetector(object):
 
                 # only update traffic light if min distance is within distance limit
                 stop_line_pos = self.waypoints.waypoints[stop_wp_idx].pose.pose.position
-                self.tl_min_distance = self.euclidean_distance(car_pose.x, car_pose.y, car_pose.z, stop_line_pos.x,
-                                                               stop_line_pos.y, stop_line_pos.z)
+                self.tl_min_distance = self.euclidean_distance(car_pose.x, car_pose.y, car_pose.z,
+                                                               stop_line_pos.x, stop_line_pos.y, stop_line_pos.z)
                 if (self.tl_min_distance < DISTANCE_LIMIT):
-                    if state == 0:
+                    if state == TrafficLight.RED:
                         state_str = "RED"
-                    elif state == 1:
+                    elif state == TrafficLight.YELLOW:
                         state_str = "YELLOW"
                     else:
                         state_str = "GREEN"
@@ -228,6 +228,10 @@ class TLDetector(object):
                     return stop_wp_idx, state
                 else:
                     return -1, TrafficLight.UNKNOWN
+
+            else:
+                return -1, TrafficLight.UNKNOWN
+
         else:
             return -1, TrafficLight.UNKNOWN
 

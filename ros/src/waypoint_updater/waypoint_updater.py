@@ -28,7 +28,7 @@ as well as to verify your TL classifier.
 '''
 
 LOOKAHEAD_WPS = 100  # Number of waypoints we will publish. You can change this number
-SAFETY_BUFFER = 0.75
+SAFETY_BUFFER = 1.0
 
 
 class State(Enum):
@@ -201,7 +201,7 @@ class WaypointUpdater(object):
         next_waypoints = []
         init_vel = self.velocity.linear.x
         end = start + LOOKAHEAD_WPS
-        dist_to_tl = self.distance(waypoints, start, self.traffic_index)
+        dist_to_tl = self.distance(waypoints, start, self.traffic_index) - SAFETY_BUFFER
         decel = init_vel ** 2 / (2 * dist_to_tl)
         # if decel > self.decel_limit_max:
         #     decel = self.decel_limit_max
@@ -209,7 +209,7 @@ class WaypointUpdater(object):
             dist = self.distance(waypoints, start, (idx+1)%len(waypoints))
             if idx < self.traffic_index:
                 vel2 = init_vel**2 - 2 * decel * dist
-                if vel2 < 1.0:
+                if vel2 < 0.1:
                    vel2 = 0.0
                 speed = math.sqrt(vel2)
             else:

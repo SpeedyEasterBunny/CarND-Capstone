@@ -28,7 +28,7 @@ as well as to verify your TL classifier.
 '''
 
 LOOKAHEAD_WPS = 100  # Number of waypoints we will publish. You can change this number
-SAFETY_BUFFER = 0.5
+SAFETY_BUFFER = 0.75
 
 
 class State(Enum):
@@ -180,7 +180,7 @@ class WaypointUpdater(object):
         is_behind = self.is_waypoint_behind(pose, waypoints[best_index])
         if is_behind:
             best_index += 1
-        return best_index
+        return best_index % len(waypoints)
 
     def accelerate_waypoints(self, waypoints, start):
         """Return a list of n waypoints ahead of the vehicle"""
@@ -242,11 +242,11 @@ class WaypointUpdater(object):
         # Handle state changes
         if self.current_state == State.ACCELERATION:
             if self.traffic_index != -1:
-                brake_distance = self.distance(waypoints, car_index, self.traffic_index)
+                brake_distance = self.distance(waypoints, car_index, self.traffic_index) - SAFETY_BUFFER
 
                 min_brake_distance = 0.5 * self.velocity.linear.x ** 2 / self.decel_limit_max
                 max_brake_distance = 0.5 * self.velocity.linear.x ** 2 / self.decel_limit_min
-                if max_brake_distance + 50 >= brake_distance >= min_brake_distance:
+                if max_brake_distance >= brake_distance >= min_brake_distance:
                     self.current_state = State.DECELERATION
                     self.state_changed = True
 

@@ -40,6 +40,7 @@ class Controller(object):
         rospy.logdebug('DBW enabled ...')
 
         dt = rospy.get_time() - self.timestamp
+        self.timestamp = rospy.get_time()
 
         error = target_v.x - current_v.x
 

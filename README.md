@@ -6,25 +6,29 @@ As the Capstone Project of the Self-Driving Car Engineer Nanodegree, the System 
 
 ### Team: Speedy Easter Bunny
 
-**Peng Xu**
+- **Peng Xu**
 
-robotpengxu@gmail.com
+    robotpengxu@gmail.com
 
-**Ravel Antunes**
+    Role: Team Leader & Path Planning & Test.
 
-ravelantunes@gmail.com
+- **Ravel Antunes**
 
-**William O Grady**
+    ravelantunes@gmail.com
 
-willog11@gmail.com
+    Role: Twist Controller & Test.
 
-**Danilo Canivel**
+- **William O Grady**
 
-d.canivel@gmail.com
+    willog11@gmail.com
 
-**Naveen Pandey**
+    Role: Traffic Light Classifier & Traffic Light Detector.
 
-naveen.pnd@gmail.com
+- **Danilo Canivel**
+
+    d.canivel@gmail.com
+
+    Role: Traffic Light Classifier & Traffic Light Detector.
 
 ### System Architecture
 
@@ -77,6 +81,8 @@ The waypoint updater node is responsible for planning the immediate waypoints th
 
 It will the publish to `/final_waypoints` the next N number of waypoints the vehicle should go through. It also publishes the car closest waypoint index to `/car_index`.
 
+The node would generate waypoints with three modes: Acceleration, Deceleration and Continue, which depends on current state and traffic light information. The "Continue" mode allows the updater to reuse the waypoints in the previous time step that has not been followed.
+
 ### Control
 
 ![](./imgs/dbw-node-ros-graph.png)
@@ -115,20 +121,7 @@ The brake controller calculates the amount of torque to be sent to the brake by 
 
 The steering controller calculates the amount of steering it should send to the actuator using the target linear and angular velocity, taking into account the steer ratio of the vehicle.
 
-### Test on Simulator
-
-### Test on Carla
-
-### Conclusion
-
-------------------
-(Below are original readme.)
-
-This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
-
-Please use **one** of the two installation options, either native **or** docker installation.
-
-### Native Installation
+### Installation
 
 * Be sure that your workstation is running Ubuntu 16.04 Xenial Xerus or Ubuntu 14.04 Trusty Tahir. [Ubuntu downloads can be found here](https://www.ubuntu.com/download/desktop).
 * If using a Virtual Machine to install Ubuntu, use the following configuration as minimum:
@@ -145,56 +138,62 @@ Please use **one** of the two installation options, either native **or** docker 
   * Use this option to install the SDK on a workstation that already has ROS installed: [One Line SDK Install (binary)](https://bitbucket.org/DataspeedInc/dbw_mkz_ros/src/81e63fcc335d7b64139d7482017d6a97b405e250/ROS_SETUP.md?fileviewer=file-view-default)
 * Download the [Udacity Simulator](https://github.com/udacity/CarND-Capstone/releases).
 
-### Docker Installation
-[Install Docker](https://docs.docker.com/engine/installation/)
-
-Build the docker container
-```bash
-docker build . -t capstone
-```
-
-Run the docker file
-```bash
-docker run -p 4567:4567 -v $PWD:/capstone -v /tmp/log:/root/.ros/ --rm -it capstone
-```
-
-### Port Forwarding
-To set up port forwarding, please refer to the [instructions from term 2](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/16cf4a78-4fc7-49e1-8621-3450ca938b77)
-
 ### Usage
 
 1. Clone the project repository
+
 ```bash
-git clone https://github.com/udacity/CarND-Capstone.git
+git clone https://github.com/SpeedyEasterBunny/CarND-Capstone.git
 ```
 
 2. Install python dependencies
+
 ```bash
 cd CarND-Capstone
 pip install -r requirements.txt
 ```
-3. Make and run styx
+
+### Simulation Test
+
+1. Run the Simulator
+
+2. Launch the code in site mode
+
 ```bash
 cd ros
-catkin_make
-source devel/setup.sh
+source devel/setup.bash
 roslaunch launch/styx.launch
 ```
-4. Run the simulator
 
-### Real world testing
-1. Download [training bag](https://s3-us-west-1.amazonaws.com/udacity-selfdrivingcar/traffic_light_bag_file.zip) that was recorded on the Udacity self-driving car.
+3. Result
+
+Here is an example video in simulation.
+
+[![](./imgs/youtube_video_screenshot.png)](https://youtu.be/X1nAMaiJVSE)
+
+### Site Test
+
+1. Download [training bag](https://drive.google.com/file/d/0B2_h37bMVw3iYkdJTlRSUlJIamM/view?usp=sharing) that was recorded on the Udacity self-driving car
+
 2. Unzip the file
+
 ```bash
-unzip traffic_light_bag_file.zip
+unzip traffic_light_bag_files.zip
 ```
+
 3. Play the bag file
+
 ```bash
-rosbag play -l traffic_light_bag_file/traffic_light_training.bag
+rosbag play -l traffic_light_bag_files/loop_with_traffic_light.bag
 ```
-4. Launch your project in site mode
+
+4. Launch the code in site mode
+
 ```bash
-cd CarND-Capstone/ros
+cd ros
+source devel/setup.bash
 roslaunch launch/site.launch
+roslaunch launch/rviz_display.launch
 ```
-5. Confirm that traffic light detection works on real life images
+
+

@@ -47,9 +47,19 @@ The node was implemented with the following algorithm:
 
 #### 2. Traffic Light Classification
 
-Multiple approaches were investigated to determine the colour of the lights. These approaches first included the use of a SVM classifier and a GCForest classifier but finally ended with using inference based ssd_inception trained model. This model was based on the following [blog](https://becominghuman.ai/traffic-light-detection-tensorflow-api-c75fdbadac62)
+Multiple approaches were investigated to determine the traffic light and the colour of the lights. 
+These approaches first included the use of a SVM classifier and a GCForest(Deep Forests) classifiers, but the execution time for the environment used was not optimal, so we decide to use TensorFlow Object Detection API, which is an open source framework built on top of TensorFlow to construct, train and deploy object detection models.
+
+The API comes with a set of pre-trained models by [COCO Datasets](http://mscoco.org/), which we tested two different models, RCNN Resnet and SSD Inception, because of the performance on the trafficlight detection we selected ssd_inception model to use as inference to our model. 
+
+The solution was based on the following [blog](https://becominghuman.ai/traffic-light-detection-tensorflow-api-c75fdbadac62)
+
+The performance for Detect and classify the color, based on 4 classes (Red, Yellow, Green, Unknown), increase from around 800ms to 20ms, using a single Geforce 1080ti GPU
+
+The accuracy for the detector changes accordinly to the position of the camera, which fires the color classifier everytime the score for the detector is greater then 50% otherwise the color is classified as UNKNOWN.
 
 The data collection stage itself took a bit of time as data from both the simulator and real world was required. Note also 2 models were trained, one for real world testing and the other for the simulator.
+
 
 # WIP
 

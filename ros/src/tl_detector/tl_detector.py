@@ -13,7 +13,7 @@ from cv_bridge import CvBridge
 sys.path.append('light_classification')
 from light_classification.tl_classifier import TLClassifier
 
-STATE_COUNT_THRESHOLD = 3
+STATE_COUNT_THRESHOLD = 1
 DISTANCE_LIMIT = 150
 
 

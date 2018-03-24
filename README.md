@@ -77,9 +77,6 @@ Here is some output visualization from the simmulator:
 
 The solution was based on the following [blog](https://becominghuman.ai/traffic-light-detection-tensorflow-api-c75fdbadac62)
 
-
-# WIP
-
 ### Planning
 
 ![](./imgs/waypoint-updater-ros-graph.png)

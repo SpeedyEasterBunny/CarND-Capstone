@@ -193,8 +193,8 @@ class WaypointUpdater(object):
             speed = math.sqrt(init_vel**2 + 2 * accel * dist)
             if speed > self.cruise_speed:
                 speed = self.cruise_speed
-            self.set_waypoint_velocity(waypoints, idx, speed)
-            next_waypoints.append(deepcopy(waypoints[idx]))
+            self.set_waypoint_velocity(waypoints, idx%len(waypoints), speed)
+            next_waypoints.append(deepcopy(waypoints[idx%len(waypoints)]))
         return next_waypoints
 
     def decelerate_waypoints(self, waypoints, start):
@@ -214,8 +214,8 @@ class WaypointUpdater(object):
                 speed = math.sqrt(vel2)
             else:
                 speed = 0
-            self.set_waypoint_velocity(waypoints, idx, speed)
-            next_waypoints.append(deepcopy(waypoints[idx]))
+            self.set_waypoint_velocity(waypoints, idx%len(waypoints), speed)
+            next_waypoints.append(deepcopy(waypoints[idx%len(waypoints)]))
         return next_waypoints
 
     def continue_with_current_state(self, waypoints, start, target_speed):

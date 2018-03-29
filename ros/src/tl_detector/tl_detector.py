@@ -166,6 +166,8 @@ class TLDetector(object):
         stop_line_positions = self.config['stop_line_positions']
         if (self.pose):
             car_position = self.get_closest_waypoint(self.pose.pose)
+        else:
+            car_position = None
 
         # TODO find the closest visible traffic light (if one exists)
         min_distance = sys.maxsize
